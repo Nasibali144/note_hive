@@ -33,6 +33,13 @@ class _HomePageState extends State<HomePage> {
     }
   }
 
+  void _openDetailForEdit(Note note) async {
+    var  result = await Navigator.push(context, MaterialPageRoute(builder: (context) => DetailPage(note: note,)));
+    if (result != null && result == true) {
+      loadNoteList();
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -49,25 +56,31 @@ class _HomePageState extends State<HomePage> {
         ),
         itemCount: listNote.length,
         itemBuilder: (context, index) {
-          return Card(
-            child: Container(
-              padding: EdgeInsets.all(10),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Expanded(
-                    flex: 1,
-                    child: Text(listNote[index].title),
-                  ),
-                  Expanded(
-                    flex: 2,
-                    child: Text(listNote[index].content),
-                  ),
-                  Expanded(
-                    flex: 1,
-                    child: Text(listNote[index].createTime.toString()),
-                  ),
-                ],
+          return InkWell(
+            onTap: () {
+              _openDetailForEdit(listNote[index]);
+            },
+            child: Card(
+              elevation: 40,
+              child: Container(
+                padding: EdgeInsets.all(10),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Expanded(
+                      flex: 1,
+                      child: Text(listNote[index].title),
+                    ),
+                    Expanded(
+                      flex: 2,
+                      child: Text(listNote[index].content),
+                    ),
+                    Expanded(
+                      flex: 1,
+                      child: Text(listNote[index].createTime.toString()),
+                    ),
+                  ],
+                ),
               ),
             ),
           );

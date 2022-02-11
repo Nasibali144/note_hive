@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:note_hive/services/db_service.dart';
 
 import '../models/note_model.dart';
 
 class DetailPage extends StatefulWidget {
-  const DetailPage({Key? key}) : super(key: key);
   static const String id = "/detail_page";
+
+  // for edit
+  final Note? note;
+  const DetailPage({Key? key, this.note}) : super(key: key);
 
   @override
   _DetailPageState createState() => _DetailPageState();
@@ -17,26 +19,59 @@ class _DetailPageState extends State<DetailPage> {
   TextEditingController contentController = TextEditingController();
 
   Future<void> _storeNote() async {
-    String title = titleController.text.trim().toString();
-    String content = contentController.text.trim().toString();
-    if (content.isNotEmpty) {
+    if(widget.note == null) {
+      String title = titleController.text.trim().toString();
+      String content = contentController.text.trim().toString();
+      if (content.isNotEmpty) {
+        Note note = Note(
+            id: title.hashCode,
+            title: title,
+            content: content,
+            createTime: DateTime.now());
+        List<Note> noteList = DBService.loadNotes();
+        noteList.add(note);
+        await DBService.storeNotes(noteList);
+      }
+    } else {
+      String title = titleController.text.trim().toString();
+      String content = contentController.text.trim().toString();
+      List<Note> noteList = DBService.loadNotes();
       Note note = Note(
-          id: title.hashCode,
+          id: widget.note!.id,
           title: title,
           content: content,
-          createTime: DateTime.now());
-      List<Note> noteList = DBService.loadNotes();
-      noteList.add(note);
-      await DBService.storeNotes(noteList);
-      Navigator.pop(context, true);
+          createTime: widget.note!.createTime,
+          editTime: DateTime.now(),
+      );
+      noteList.removeWhere((element) => element.id == note.id);
+      if(content.isNotEmpty || title.isNotEmpty) {
+        noteList.add(note);
+        await DBService.storeNotes(noteList);
+      }
+    }
+    Navigator.pop(context, true);
+  }
+
+  void loadNote(Note? note) {
+    if(note != null) {
+      setState(() {
+        titleController.text = note.title;
+        contentController.text = note.content;
+      });
     }
   }
 
+  @override
+  void initState() {
+    super.initState();
+    loadNote(widget.note);
+  }
   @override
   Widget build(BuildContext context) {
     return WillPopScope(
       onWillPop: () async {
         _storeNote();
+        print("On Will POP");
         return false;
       },
       child: Scaffold(
