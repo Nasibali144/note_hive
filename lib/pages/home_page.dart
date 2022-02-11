@@ -34,7 +34,12 @@ class _HomePageState extends State<HomePage> {
   }
 
   void _openDetailForEdit(Note note) async {
-    var  result = await Navigator.push(context, MaterialPageRoute(builder: (context) => DetailPage(note: note,)));
+    var result = await Navigator.push(
+        context,
+        MaterialPageRoute(
+            builder: (context) => DetailPage(
+                  note: note,
+                )));
     if (result != null && result == true) {
       loadNoteList();
     }
@@ -46,6 +51,15 @@ class _HomePageState extends State<HomePage> {
       appBar: AppBar(
         centerTitle: true,
         title: Text("Note"),
+        actions: [
+          IconButton(
+            onPressed: () {
+              DBService.storeMode(!DBService.loadMode());
+              setState(() {});
+            },
+            icon: Icon(DBService.loadMode() ? Icons.dark_mode : Icons.light_mode),
+          ),
+        ],
       ),
       body: GridView.builder(
         padding: EdgeInsets.all(20),

@@ -97,7 +97,6 @@ class _DetailPageState extends State<DetailPage> {
                 controller: titleController,
                 style: const TextStyle(
                   fontSize: 20,
-                  color: Colors.black,
                   fontWeight: FontWeight.bold,
                 ),
                 decoration: const InputDecoration(
@@ -105,7 +104,6 @@ class _DetailPageState extends State<DetailPage> {
                   isCollapsed: true,
                   border: InputBorder.none,
                   hintText: "Title",
-                  hintStyle: TextStyle(color: Colors.grey),
                 ),
                 cursorColor: Colors.orange,
                 textAlignVertical: TextAlignVertical.center,
@@ -120,7 +118,6 @@ class _DetailPageState extends State<DetailPage> {
                 controller: contentController,
                 style: const TextStyle(
                   fontSize: 18,
-                  color: Colors.black,
                 ),
                 decoration: const InputDecoration(
                   contentPadding: EdgeInsets.zero,

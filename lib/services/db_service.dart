@@ -8,6 +8,14 @@ class DBService {
   static const String dbName = "db_notes";
   static Box box = Hive.box(dbName);
 
+  static Future<void> storeMode(bool isLight) async {
+    await box.put("isLight", isLight);
+  }
+
+  static bool loadMode() {
+    return box.get("isLight", defaultValue: true);
+  }
+
   static Future<void> storeNotes(List<Note> noteList) async {
     // object => map => String
     List<String> stringList = noteList.map((note) => jsonEncode(note.toJson())).toList();

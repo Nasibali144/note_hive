@@ -22,6 +22,9 @@ class MyApp extends StatelessWidget {
       valueListenable: DBService.box.listenable(),
       builder: (context, box, widget) {
         return MaterialApp(
+          themeMode: DBService.loadMode() ? ThemeMode.light: ThemeMode.dark,
+          darkTheme: ThemeData.dark(),
+          theme: ThemeData.light(),
           debugShowCheckedModeBanner: false,
           home: const HomePage(),
           routes: {
